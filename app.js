@@ -838,7 +838,7 @@ function simulateLiveSales() {
       const city = cities[Math.floor(Math.random() * cities.length)];
       const name = names[Math.floor(Math.random() * names.length)];
       const product = products[Math.floor(Math.random() * products.length)];
-      showToast(\`🔔 \${name} de \${city} acaba de comprar: \${product.name}\`);
+      showToast(`🔔 ${name} de ${city} acaba de comprar: ${product.name}`);
     }
   }, 15000); // Intenta cada 15 segundos
 }
