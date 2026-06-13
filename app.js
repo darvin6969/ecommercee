@@ -643,3 +643,28 @@ window.openCart = openCart;
 window.toggleFavorite = toggleFavorite;
 window.changeFalaMainImg = changeFalaMainImg;
 window.toggleFavoriteDetail = toggleFavoriteDetail;
+
+// Inicializar animaciones GSAP
+if (window.gsap) {
+  gsap.from("#hero3dCard", {
+    y: 50,
+    opacity: 0,
+    duration: 1.2,
+    ease: "power3.out",
+    delay: 0.2
+  });
+  gsap.from(".floating-mini.one", {
+    x: -30,
+    opacity: 0,
+    duration: 1,
+    ease: "back.out(1.5)",
+    delay: 0.6
+  });
+  gsap.from(".floating-mini.two", {
+    x: 30,
+    opacity: 0,
+    duration: 1,
+    ease: "back.out(1.5)",
+    delay: 0.8
+  });
+}
