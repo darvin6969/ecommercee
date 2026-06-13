@@ -346,6 +346,22 @@ function openProductPage(id) {
           <a href="#" class="fala-more-specs">Ver más especificaciones</a>
         </div>
       </div>
+      
+      <!-- 3. AI Cross-Selling Recommendations -->
+      <div class="fala-related" style="margin-top: 40px; border-top: var(--glass-border); padding-top: 20px;">
+        <h3 style="font-size: 1.2rem; margin-bottom: 20px; color: var(--primary);">✨ También te podría interesar (Recomendado por IA)</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+          ${products.filter(p => p.id !== product.id && p.category !== product.category).sort(() => 0.5 - Math.random()).slice(0, 4).map(p => `
+            <div class="product-card" onclick="openProductPage(${p.id})" style="cursor:pointer; transform:none; animation:none; margin:0;">
+              <div class="visual" style="height:150px; font-size:4rem; border-radius: 12px 12px 0 0;">${p.icon}</div>
+              <div class="card-body" style="padding:15px; border-radius: 0 0 12px 12px;">
+                <h4 style="font-size:0.9rem; margin-bottom:10px; font-weight: 600;">${p.name}</h4>
+                <span class="price" style="font-size:1.1rem; color: var(--primary); font-weight: 800;">${formatMoney(p.price)}</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
     </div>
   `;
   
@@ -541,6 +557,16 @@ function botReply(text) {
       });
     });
   };
+
+  // 1. Multilingual Support (Simulated Translator)
+  // English
+  if (match(['hello', 'hi', 'morning', 'help', 'english'])) return 'Hello! I am the InnovVentas intelligent assistant. I can help you with products, payments, shipping, warranties, and more. How can I assist you today?';
+  if (match(['buy', 'price', 'cost'])) return '💻 We have a wide variety of Tech products available! Please browse our catalog. If you need a specific model, let me know.';
+  if (match(['shipping', 'delivery'])) return '🚚 We ship nationwide. Deliveries in Lima take 24-48 hours. For other cities, it takes 3-5 business days.';
+  // Portuguese
+  if (match(['olá', 'bom', 'dia', 'ajuda', 'tarde', 'portugues'])) return 'Olá! Sou o assistente inteligente da InnovVentas. Posso ajudá-lo com nosso catálogo de produtos, pagamentos, envios, e mais. Como posso ajudar hoje?';
+  if (match(['comprar', 'preço', 'custo'])) return '💻 Temos uma grande variedade de Laptops e Celulares! Fique à vontade para explorar nosso catálogo.';
+  if (match(['frete', 'entrega'])) return '🚚 Fazemos envios para todo o país. Em Lima, a entrega leva de 24 a 48 horas.';
 
   if (match(['asesor', 'humano', 'persona', 'agente', 'hablar'])) {
     state.metrics.supportRequests += 1; saveMetrics();
@@ -802,6 +828,21 @@ renderProducts();
 renderCart();
 setupEvents();
 updateThemeIcon(savedTheme);
+
+// 4. Simulated Live Sales Notifications (Social Proof)
+function simulateLiveSales() {
+  const cities = ['Lima', 'Arequipa', 'Trujillo', 'Cusco', 'Piura'];
+  const names = ['Carlos', 'Ana', 'Luis', 'María', 'Jorge', 'Lucía'];
+  setInterval(() => {
+    if (Math.random() > 0.4) {
+      const city = cities[Math.floor(Math.random() * cities.length)];
+      const name = names[Math.floor(Math.random() * names.length)];
+      const product = products[Math.floor(Math.random() * products.length)];
+      showToast(\`🔔 \${name} de \${city} acaba de comprar: \${product.name}\`);
+    }
+  }, 15000); // Intenta cada 15 segundos
+}
+setTimeout(simulateLiveSales, 5000);
 
 // Exponer funciones globales para eventos inline en HTML
 window.addToCart = addToCart;
