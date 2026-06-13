@@ -596,12 +596,44 @@ function setupEvents() {
 
   $('#backToCatalogBtn').addEventListener('click', closeProductPage);
 
-  $('#themeToggleBtn').addEventListener('click', () => {
+  $('#themeToggleBtn').addEventListener('click', (e) => {
     const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-    updateThemeIcon(newTheme);
+    
+    const toggleTheme = () => {
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeIcon(newTheme);
+    };
+
+    if (!document.startViewTransition) {
+      toggleTheme();
+      return;
+    }
+
+    const x = e.clientX || window.innerWidth / 2;
+    const y = e.clientY || window.innerHeight / 2;
+    const endRadius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    );
+
+    const transition = document.startViewTransition(toggleTheme);
+    transition.ready.then(() => {
+      document.documentElement.animate(
+        {
+          clipPath: [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`
+          ]
+        },
+        {
+          duration: 600,
+          easing: 'ease-in-out',
+          pseudoElement: '::view-transition-new(root)'
+        }
+      );
+    });
   });
 
   $('#openCartBtn').addEventListener('click', openCart);

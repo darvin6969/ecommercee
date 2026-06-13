@@ -396,3 +396,16 @@ details p { color: var(--muted); line-height: 1.7; margin-top: 16px; margin-bott
     transform: translateY(0);
   }
 }
+
+/* Configuracion de Animacion de Tema (View Transitions) */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+  z-index: 1;
+}
+::view-transition-new(root) {
+  z-index: 9999;
+}
