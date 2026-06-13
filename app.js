@@ -373,7 +373,7 @@ function openProductPage(id) {
       
       <!-- 3. AI Cross-Selling Recommendations -->
       <div class="fala-related" style="margin-top: 40px; border-top: var(--glass-border); padding-top: 20px;">
-        <h3 style="font-size: 1.2rem; margin-bottom: 20px; color: var(--primary);">También te podría interesar (Recomendado por IA)</h3>
+        <h3 style="font-size: 1.2rem; margin-bottom: 20px; color: var(--primary);">También te podría interesar</h3>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
           ${products.filter(p => p.id !== product.id && p.category !== product.category).sort(() => 0.5 - Math.random()).slice(0, 4).map(p => `
             <div class="product-card" onclick="openProductPage(${p.id})" style="cursor:pointer; transform:none; animation:none; margin:0;">
