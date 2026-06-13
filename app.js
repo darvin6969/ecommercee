@@ -174,26 +174,27 @@ function renderProducts() {
 }
 
 function renderCarousel() {
-  const topProducts = products.filter(p => p.rating >= 4.6).slice(0, 8);
   const container = document.getElementById('topCarousel');
   if (!container) return;
   
-  container.innerHTML = topProducts.map(product => `
-    <article class="product-card" onclick="openProductPage(${product.id})" style="cursor:pointer; transform:none; animation:none;">
-      <div class="visual" style="height:180px; font-size:5rem; border-radius: 12px 12px 0 0;">${product.icon}</div>
-      <div class="card-body" style="padding:15px; border-radius: 0 0 12px 12px;">
-        <small class="muted">${product.category}</small>
-        <h4 style="font-size:1rem; margin-bottom:10px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${product.name}</h4>
-        <span class="price" style="font-size:1.1rem; color: var(--primary); font-weight: 800;">${formatMoney(product.price)}</span>
-      </div>
+  const banners = [
+    'https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=1200&h=400&q=80',
+    'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=1200&h=400&q=80',
+    'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?auto=format&fit=crop&w=1200&h=400&q=80',
+    'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&h=400&q=80'
+  ];
+
+  container.innerHTML = banners.map(url => `
+    <article class="banner-slide" style="min-width: 100%; scroll-snap-align: center; border-radius: 16px; overflow: hidden; flex-shrink: 0;">
+      <img src="${url}" alt="Promoción Especial" style="width: 100%; height: 350px; object-fit: cover; display: block;" />
     </article>
   `).join('');
 
   document.getElementById('scrollLeftBtn').addEventListener('click', () => {
-    container.scrollBy({ left: -300, behavior: 'smooth' });
+    container.scrollBy({ left: -container.clientWidth, behavior: 'smooth' });
   });
   document.getElementById('scrollRightBtn').addEventListener('click', () => {
-    container.scrollBy({ left: 300, behavior: 'smooth' });
+    container.scrollBy({ left: container.clientWidth, behavior: 'smooth' });
   });
 
   // Auto-scroll dinámico
@@ -202,7 +203,7 @@ function renderCarousel() {
       if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 10) {
         container.scrollTo({ left: 0, behavior: 'smooth' });
       } else {
-        container.scrollBy({ left: 300, behavior: 'smooth' });
+        container.scrollBy({ left: container.clientWidth, behavior: 'smooth' });
       }
     }, 3500);
   };
