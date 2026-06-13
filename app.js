@@ -516,26 +516,6 @@ function trackOrder(code) {
   return `<strong>Pedido ${order.id}</strong><p>Estado: <strong>${order.status}</strong></p><p>Fecha: ${order.date}</p><p>Total: ${formatMoney(order.total)}</p>`;
 }
 
-function renderMetrics() {
-  const details = getCartDetails();
-  const estimatedAbandonment = details.items.length ? 1 : 0;
-  state.metrics.cartAbandonment = Math.max(state.metrics.cartAbandonment, estimatedAbandonment);
-  saveMetrics();
-  const metrics = [
-    ['Visitas', state.metrics.visits],
-    ['Vistas de productos', state.metrics.productViews],
-    ['Agregados al carrito', state.metrics.addToCart],
-    ['Intentos de checkout', state.metrics.checkouts],
-    ['Pedidos generados', state.metrics.orders],
-    ['Aperturas del chatbot', state.metrics.chatbotOpens],
-    ['Mensajes al chatbot', state.metrics.chatbotMessages],
-    ['Solicitudes de soporte', state.metrics.supportRequests],
-    ['Carritos activos', state.cart.length],
-  ];
-  $('#metricsGrid').innerHTML = metrics.map(([label, value]) => `
-    <article class="metric-card"><strong>${value}</strong><span>${label}</span></article>
-  `).join('');
-}
 
 function showToast(message) {
   let toast = $('.toast');
@@ -772,9 +752,6 @@ function setupEvents() {
     $('#trackResult').innerHTML = trackOrder($('#trackInput').value.trim());
   });
 
-  $('#metricsBtn').addEventListener('click', () => { renderMetrics(); $('#metricsModal').showModal(); });
-  $('#closeMetricsModal').addEventListener('click', () => $('#metricsModal').close());
-  $('#resetMetricsBtn').addEventListener('click', () => { state.metrics = { ...defaultMetrics, visits: 1 }; saveMetrics(); renderMetrics(); showToast('Métricas reiniciadas'); });
 
   if (!USE_LOCAL_CHATBOT) {
     $('#chatWidget').style.display = 'none';
