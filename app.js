@@ -646,13 +646,88 @@ function botReply(text) {
     return 'Contamos con gran variedad de Laptops, Celulares y Tablets. Indícame una marca o tipo de producto para recomendarte opciones.';
   }
 
-  if (match(['estudio', 'universidad', 'colegio', 'estudiar'])) return '📚 Para estudiar, recomiendo una Laptop Core i5 o Ryzen 5, con 8GB RAM y SSD (desde S/ 1,899). Revisa nuestras opciones HP o Lenovo en catálogo.';
-  if (match(['trabajo', 'oficina', 'programar', 'ingenieria'])) return '💼 Para trabajo profesional, te sugiero una Laptop con 16GB RAM y buena batería. Te recomiendo revisar los modelos de ASUS y Lenovo IdeaPad.';
-  if (match(['gaming', 'jugar', 'juegos', 'gamer'])) return '🎮 Para gaming necesitas Tarjeta Gráfica y buena ventilación. Revisa nuestras opciones ASUS ROG o escribe "Gamer" en el buscador.';
+  if (match(['estudio', 'universidad', 'colegio', 'estudiar'])) return 'Para estudiar, recomiendo una Laptop Core i5 o Ryzen 5, con 8GB RAM y SSD (desde S/ 1,899). Revisa nuestras opciones HP o Lenovo en catálogo.';
+  if (match(['trabajo', 'oficina', 'programar', 'ingenieria'])) return 'Para trabajo profesional, te sugiero una Laptop con 16GB RAM y buena batería. Te recomiendo revisar los modelos de ASUS y Lenovo IdeaPad.';
+  if (match(['gaming', 'jugar', 'juegos', 'gamer'])) return 'Para gaming necesitas Tarjeta Gráfica y buena ventilación. Revisa nuestras opciones ASUS ROG o escribe "Gamer" en el buscador.';
 
-  if (match(['gracias', 'chau', 'adios', 'ok', 'vale', 'listo', 'entendido'])) return '¡Gracias a ti por comunicarte con InnovVentas! Estaré por aquí si tienes más consultas. ¡Que tengas un gran día! 👋';
+  // Saludos y despedidas
+  if (match(['gracias', 'chau', 'adios', 'hasta', 'bye', 'nos vemos'])) return 'Gracias a ti por comunicarte con InnovVentas. Estaré por aquí si tienes más consultas. Que tengas un gran día.';
+  if (match(['ok', 'vale', 'listo', 'entendido', 'perfecto', 'excelente', 'claro'])) return 'Perfecto. Si necesitas algo más, no dudes en escribirme. Estoy aquí para ayudarte.';
+  if (match(['bueno', 'bien', 'todo bien', 'genial', 'super'])) return 'Me alegra escuchar eso. Si tienes más preguntas sobre nuestros productos o servicios, con gusto te ayudo.';
 
-  return 'Hmm, no estoy seguro de entender esa consulta. 🤔\n\nPuedo ayudarte con:\n• Catálogo y Stock\n• Envíos y Delivery\n• Pagos y Facturación\n• Ofertas\n• Garantía\n\nO puedes escribir "Asesor" para hablar con un humano.';
+  // Productos específicos
+  if (match(['productos', 'catalogo', 'ver', 'mostrar', 'lista', 'que tienen', 'que venden'])) return 'Tenemos más de 30 productos en catálogo: Laptops, Celulares, Tablets, Audífonos, Impresoras y Accesorios. Puedes explorarlos todos en la sección "Productos" de la tienda.';
+  if (match(['precio', 'cuanto', 'cuesta', 'vale', 'cobran', 'costo', 'soles'])) return 'Los precios varían según el producto. Tenemos equipos desde S/ 89 (accesorios) hasta S/ 4,999 (laptops de alta gama). Puedes ver el precio exacto de cada producto en su tarjeta en el catálogo.';
+  if (match(['marca', 'marcas', 'fabricante'])) return 'Trabajamos con las mejores marcas del mercado: Apple, Samsung, HP, Lenovo, ASUS, Xiaomi, Sony, JBL, Logitech y más. Usa el buscador para filtrar por marca.';
+  if (match(['nuevo', 'novedad', 'ultimo', 'reciente', 'lanzamiento'])) return 'Nuestros últimos lanzamientos incluyen el iPhone 15, Samsung Galaxy S24 y el ASUS ROG Strix. Revisa la sección "Novedades" en la parte superior de la tienda.';
+  if (match(['recomendacion', 'recomiendas', 'cual es mejor', 'que me recomiendas', 'mejor opcion'])) return 'Depende de tu uso. Para estudio: Lenovo IdeaPad. Para trabajo pesado: ASUS VivoBook Pro. Para gaming: ASUS ROG. Para uso diario: HP Pavilion. Dime más sobre lo que necesitas y te ayudo a elegir.';
+  if (match(['comparar', 'diferencia', 'versus', 'vs', 'cual es mejor entre'])) return 'Para comparar dos productos, puedes abrir cada uno desde el catálogo y revisar sus especificaciones. Si quieres, dime los dos modelos que te interesan y te ayudo a decidir.';
+  if (match(['especificaciones', 'specs', 'ficha tecnica', 'caracteristicas', 'ram', 'procesador', 'almacenamiento', 'ssd'])) return 'Cada producto en nuestro catálogo tiene su ficha técnica completa. Haz clic en "Ver detalles" para ver RAM, procesador, almacenamiento, pantalla y más.';
+  if (match(['color', 'colores', 'negro', 'blanco', 'plateado', 'dorado', 'rojo', 'azul'])) return 'La disponibilidad de colores depende del modelo. Te recomiendo revisar la ficha de cada producto o escribirnos para confirmar el color exacto que buscas.';
+  if (match(['peso', 'dimension', 'medida', 'tamaño', 'portatil', 'ligero'])) return 'Las dimensiones y peso están en la ficha técnica de cada producto. En general, nuestras laptops ultrafinas pesan entre 1.2kg y 1.8kg.';
+  if (match(['bateria', 'autonomia', 'dura', 'carga rapida', 'cargador'])) return 'La duración de batería varía por modelo. Nuestras laptops tienen entre 6 y 12 horas de autonomía. Los celulares de gama media-alta entre 4,000 y 5,000 mAh. Consulta la ficha técnica para detalles.';
+  if (match(['pantalla', 'display', 'pulgadas', 'resolucion', 'full hd', '4k', 'oled', 'amoled'])) return 'Contamos con pantallas Full HD, 2K y 4K según el modelo. Nuestros celulares premium tienen AMOLED y los monitores van de 24" a 32". Revisa la ficha del producto para la resolución exacta.';
+  if (match(['camara', 'foto', 'video', 'megapixeles', 'mp', 'selfie'])) return 'Los smartphones que vendemos tienen cámaras desde 12MP hasta 200MP. Para uso profesional, te recomiendo el Samsung Galaxy S24 Ultra o iPhone 15 Pro. Puedes ver las especificaciones completas en el catálogo.';
+  if (match(['memoria', 'gb', 'almacenamiento', 'disco', 'espacio'])) return 'Tenemos equipos con 128GB, 256GB, 512GB y hasta 1TB de almacenamiento. En laptops, todos nuestros modelos incluyen SSD para mayor velocidad.';
+  if (match(['accesorios', 'mouse', 'teclado', 'audifono', 'parlante', 'webcam', 'cable', 'hub'])) return 'Tenemos una amplia sección de accesorios: mouse, teclados, audífonos, parlantes, webcams, hubs USB y más. Filtra por "Accesorios" en el catálogo para verlos todos.';
+  if (match(['auricular', 'headset', 'inalambrico', 'bluetooth', 'earphone', 'airpod'])) return 'Contamos con auriculares Bluetooth, con cable, y con cancelación de ruido de marcas como Sony, JBL y Apple AirPods. Revisa nuestra sección de Audio en el catálogo.';
+  if (match(['impresora', 'tinta', 'laser', 'multifuncional', 'escanear', 'copiar', 'imprimir'])) return 'Tenemos impresoras de tinta y láser, algunas multifuncionales con escáner y copiadora incluidos. Marcas disponibles: HP y Epson. Revisa la sección "Impresoras" en el catálogo.';
+
+  // Carrito y compra
+  if (match(['carrito', 'agregar', 'comprar', 'añadir'])) return 'Para agregar un producto al carrito, pasa el mouse por encima de la tarjeta del producto y haz clic en el botón que aparece. También puedes entrar al detalle del producto y hacer clic en "Agregar al Carro".';
+  if (match(['checkout', 'finalizar', 'pedir', 'realizar pedido', 'confirmar'])) return 'Para finalizar tu compra, abre el carrito desde el botón superior derecho, revisa tus productos y haz clic en "Finalizar pedido". Completa el formulario con tus datos y listo.';
+  if (match(['eliminar', 'quitar', 'borrar del carrito', 'sacar'])) return 'Para eliminar un producto del carrito, ábrelo desde el ícono superior y usa el botón de eliminar junto a cada artículo.';
+  if (match(['cantidad', 'cuantos', 'unidades', 'mas de uno', 'varios'])) return 'Puedes ajustar la cantidad de cada producto desde el carrito usando los botones + y -, siempre que haya stock disponible.';
+
+  // Pagos
+  if (match(['credito', 'debito', 'cuotas', 'financiamiento', 'meses', 'interes'])) return 'Aceptamos tarjetas de crédito y débito Visa y Mastercard. Ofrecemos hasta 6 cuotas sin intereses para compras con tarjeta de crédito.';
+  if (match(['yape', 'plin', 'transferencia', 'bcp', 'interbank', 'bbva', 'scotiabank'])) return 'Aceptamos Yape, Plin y transferencias bancarias a BCP, Interbank, BBVA y Scotiabank. Una vez confirmada la transferencia, procesamos tu pedido de inmediato.';
+  if (match(['contra entrega', 'contraentrega', 'pago al recibir', 'pago en casa'])) return 'Sí, aceptamos pago contra entrega solo para entregas dentro de Lima Metropolitana. El costo del envío se cobra al momento de recibir el pedido.';
+  if (match(['seguro', 'confiable', 'fraude', 'estafa', 'proteccion'])) return 'Todas nuestras transacciones están protegidas con cifrado SSL. No almacenamos datos de tarjetas. Puedes comprar con total confianza en InnovVentas.';
+
+  // Envíos y entrega
+  if (match(['gratis', 'envio gratis', 'sin costo', 'delivery gratis'])) return 'El envío es GRATIS para compras mayores a S/ 200 dentro de Lima. Para compras menores, el costo es de S/ 15.';
+  if (match(['rapido', 'express', 'mismo dia', 'urgente', 'hoy'])) return 'Ofrecemos delivery express el mismo día para pedidos realizados antes de las 12pm dentro de Lima Metropolitana, con un costo adicional de S/ 25.';
+  if (match(['recojo', 'recoger', 'pickup', 'tienda', 'showroom'])) return 'Puedes recoger tu pedido en nuestro Showroom en Av. Tecnología 1024, Miraflores, Lima. El recojo en tienda es sin costo adicional y en horario de Lunes a Sábado de 10am a 7pm.';
+  if (match(['embalaje', 'empaque', 'caja', 'envuelto', 'regalo'])) return 'Todos nuestros productos se envían con embalaje seguro. Si deseas un empaque especial para regalo, indícanoslo en las observaciones al finalizar tu pedido.';
+  if (match(['internacional', 'extranjero', 'otro pais', 'exterior'])) return 'Por el momento, solo hacemos envíos dentro del territorio peruano. Si estás en el extranjero, puedes coordinar un recojo con un tercero en Lima.';
+
+  // Garantía y soporte
+  if (match(['garantia', 'tiempo', 'meses garantia', 'año garantia'])) return 'Todos nuestros equipos incluyen garantía oficial del fabricante por 12 meses. Algunas marcas como Apple y Samsung ofrecen hasta 24 meses.';
+  if (match(['reparacion', 'tecnico', 'servicio tecnico', 'arreglar', 'daño'])) return 'Si tu equipo presenta fallas dentro de la garantía, coordínalo con nosotros y lo enviamos al servicio técnico autorizado sin costo. Fuera de garantía, te conectamos con técnicos de confianza.';
+  if (match(['devolver', 'devolucion', 'retornar', 'no sirve', 'no funciona', 'defecto'])) return 'Si el producto tiene un defecto de fábrica, tienes 7 días para solicitar la devolución o cambio. El producto debe estar en su empaque original con todos sus accesorios y boleta.';
+  if (match(['cambio', 'cambiar', 'otro modelo', 'diferente'])) return 'Aceptamos cambios de producto dentro de los 7 días, siempre que el artículo esté sin uso y en su empaque original. Coordina el cambio enviándonos un mensaje.';
+  if (match(['manual', 'instrucciones', 'como usar', 'tutorial', 'configurar'])) return 'Los manuales de uso están incluidos en la caja del producto. También puedes encontrar tutoriales oficiales en la web del fabricante. Si tienes una duda específica, dímela y te oriento.';
+
+  // Cuenta y pedidos
+  if (match(['cuenta', 'registro', 'iniciar sesion', 'login', 'contraseña'])) return 'Esta es una tienda demo, por lo que no requiere registro de cuenta. Puedes comprar directamente sin iniciar sesión.';
+  if (match(['historial', 'mis pedidos', 'mis compras', 'anteriores'])) return 'Tus pedidos realizados en esta sesión se guardan en el navegador. Puedes rastrearlos en la sección "Seguimiento" del menú usando tu código de pedido.';
+  if (match(['codigo', 'numero de pedido', 'id', 'referencia'])) return 'Al confirmar tu compra, recibirás un código de pedido con formato IV-XXXXXX. Guárdalo para hacer seguimiento desde la sección "Seguimiento" del menú.';
+  if (match(['facturacion', 'empresa', 'negocio', 'corporativo', 'ruc'])) return 'Emitimos facturas para empresas. Al finalizar tu pedido, indica tu RUC y razón social en el campo correspondiente del formulario de compra.';
+
+  // Tienda y empresa
+  if (match(['quienes son', 'sobre ustedes', 'empresa', 'innov', 'innovventas'])) return 'InnovVentas es una tienda tecnológica peruana especializada en equipos de cómputo, celulares y accesorios. Contamos con atención 24/7 a través de nuestro chatbot y asesores en horario de oficina.';
+  if (match(['mision', 'vision', 'valores', 'historia'])) return 'Nuestra misión es acercar la tecnología a todos los peruanos con los mejores precios, atención personalizada y garantía respaldada. Llevamos más de 5 años en el mercado tecnológico.';
+  if (match(['redes', 'facebook', 'instagram', 'whatsapp', 'youtube', 'tiktok'])) return 'Puedes encontrarnos en Instagram, Facebook y TikTok como @InnovVentas. También tenemos un canal de WhatsApp Business para consultas rápidas.';
+  if (match(['correo', 'email', 'contacto', 'llamar', 'telefono', 'celular'])) return 'Puedes contactarnos por correo a soporte@innovventas.pe o llamarnos al 01-555-1234 (Lima) de Lunes a Sábado de 9am a 8pm.';
+  if (match(['chat', 'bot', 'chatbot', 'asistente', 'ia', 'inteligencia artificial'])) return 'Soy el asistente virtual de InnovVentas, impulsado por inteligencia artificial. Estoy disponible 24/7 para responder tus consultas sobre productos, pagos, envíos y más.';
+
+  // Preguntas frecuentes adicionales
+  if (match(['wifi', 'internet', 'conectividad', 'ethernet', 'red'])) return 'Todos nuestros laptops y tablets tienen WiFi integrado. Algunos modelos incluyen también Ethernet RJ45. Los celulares tienen WiFi 6 y algunos también 5G.';
+  if (match(['5g', '4g', 'lte', 'operadora', 'chip', 'sim'])) return 'Varios de nuestros celulares son compatibles con 5G. Verifica la ficha técnica de cada modelo. Son desbloqueados y funcionan con todas las operadoras (Claro, Movistar, Entel, Bitel).';
+  if (match(['desbloqueado', 'libre', 'operadora libre', 'chip libre'])) return 'Todos los celulares que vendemos son desbloqueados (liberados de fábrica). Funcionan con cualquier operadora peruana e internacional.';
+  if (match(['regalo', 'cumpleaños', 'aniversario', 'navidad', 'dia del padre', 'dia de la madre'])) return 'Tenemos opciones perfectas para regalo. Nuestros más populares son los AirPods, smartwatches y laptops ultrabook. Todos incluyen garantía y pueden ir con empaque especial de regalo.';
+  if (match(['smartwatch', 'reloj', 'wearable', 'pulsera', 'fitbit', 'apple watch', 'galaxy watch'])) return 'Contamos con smartwatches y pulseras de actividad de Apple, Samsung y Xiaomi. Puedes verlos en la sección de Accesorios del catálogo.';
+  if (match(['monitor', 'pantalla extra', 'segundo monitor', 'doble pantalla'])) return 'Tenemos monitores Full HD y 4K desde 24" hasta 32". Perfectos para home office o gaming. Revisa la sección de Accesorios en el catálogo.';
+  if (match(['proyector', 'beamer', 'presentacion', 'reuniones'])) return 'Por el momento no contamos con proyectores en catálogo, pero sí tenemos monitores y pantallas para presentaciones. Te recomendamos escribirnos para consultas especiales de equipos corporativos.';
+  if (match(['software', 'windows', 'office', 'antivirus', 'licencia', 'programa'])) return 'Nuestras laptops vienen con Windows 11 Home preinstalado. Microsoft Office se vende por separado. También ofrecemos antivirus Norton con 1 año de licencia como accesorio adicional.';
+  if (match(['linux', 'mac', 'macos', 'apple', 'macbook'])) return 'Contamos con MacBooks en nuestro catálogo. Para laptops con Linux, algunos modelos ASUS y HP pueden configurarse. Escríbenos y te asesoramos.';
+  if (match(['garantia extendida', 'seguro de equipo', 'proteccion adicional'])) return 'Ofrecemos garantía extendida por 1 año adicional al costar S/ 99 para equipos mayores a S/ 1,500. Incluye protección contra golpes y líquidos. Consulta disponibilidad al confirmar tu pedido.';
+  if (match(['instalacion', 'configuracion', 'instalar', 'configurar mi equipo'])) return 'Ofrecemos servicio de configuración inicial para tu equipo nuevo por S/ 49. Incluye instalación de drivers, Office, antivirus y transferencia de archivos. Coordínalo al momento de comprar.';
+  if (match(['canje', 'canjear', 'puntos', 'fidelidad', 'descuento cliente'])) return 'Actualmente estamos desarrollando nuestro programa de fidelidad. Por ahora puedes usar el cupón INNOV10 para obtener un 10% de descuento en tu primera compra mayor a S/ 500.';
+  if (match(['demo', 'prueba', 'ver funcionar', 'probar'])) return 'Esta es una tienda demo completamente funcional. Puedes explorar productos, agregar al carrito, usar el cupón INNOV10 y simular una compra completa para ver cómo funciona el proceso.';
+
+  return 'No estoy seguro de entender esa consulta.\n\nPuedo ayudarte con:\n• Catalogo y Stock\n• Envios y Delivery\n• Pagos y Facturacion\n• Ofertas y Cupones\n• Garantia y Soporte\n• Informacion de la tienda\n\nEscribe "Asesor" si prefieres hablar con una persona.';
 }
 
 function addChatMessage(text, sender = 'bot') {
