@@ -195,6 +195,25 @@ function renderCarousel() {
   document.getElementById('scrollRightBtn').addEventListener('click', () => {
     container.scrollBy({ left: 300, behavior: 'smooth' });
   });
+
+  // Auto-scroll dinámico
+  const startAutoScroll = () => {
+    return setInterval(() => {
+      if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 10) {
+        container.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        container.scrollBy({ left: 300, behavior: 'smooth' });
+      }
+    }, 3500);
+  };
+
+  let autoScrollInterval = startAutoScroll();
+
+  container.addEventListener('mouseenter', () => clearInterval(autoScrollInterval));
+  container.addEventListener('mouseleave', () => {
+    clearInterval(autoScrollInterval);
+    autoScrollInterval = startAutoScroll();
+  });
 }
 
 function flyToCart(button) {
