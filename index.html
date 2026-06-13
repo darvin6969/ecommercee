@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InnovVentas | E-commerce tecnológico</title>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar" id="inicio">
+    <div class="container nav-wrap">
+      <a class="brand" href="#inicio" aria-label="InnovVentas inicio">
+        <span class="brand-logo">IV</span>
+        <span>
+          <strong>InnovVentas</strong>
+          <small>Tecnología inteligente</small>
+        </span>
+      </a>
+
+      <nav class="nav-links" aria-label="Navegación principal">
+        <a href="#productos">Productos</a>
+        <a href="#ofertas">Ofertas</a>
+        <a href="#seguimiento">Seguimiento</a>
+        <a href="#soporte">Soporte</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="icon-btn" id="themeToggleBtn" title="Cambiar Tema"><i class="ph ph-sun"></i></button>
+        <button class="icon-btn" id="favoritesBtn" title="Favoritos"><i class="ph ph-heart"></i> <span id="favCount">0</span></button>
+        <button class="cart-btn" id="openCartBtn"><i class="ph ph-shopping-cart"></i> Carrito <span id="cartCount">0</span></button>
+      </div>
+    </div>
+  </header>
+
+  <div id="mainView">
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <p class="eyebrow">E-commerce demo para AI-900</p>
+          <h1>Compra tecnología con atención automática 24/7</h1>
+          <p class="hero-text">Explora laptops, celulares, tablets y accesorios. Nuestro chatbot ayuda con productos, pagos, envíos, garantías y soporte básico.</p>
+          <div class="hero-actions">
+            <a class="primary-btn" href="#productos">Ver productos</a>
+            <button class="secondary-btn" id="openChatHero">Hablar con el bot</button>
+          </div>
+          <div class="hero-stats" aria-label="Indicadores">
+            <div><strong>+30</strong><span>productos demo</span></div>
+            <div><strong>24/7</strong><span>atención automática</span></div>
+            <div><strong>48h</strong><span>delivery ciudad</span></div>
+          </div>
+        </div>
+        <div class="hero-card">
+          <div class="device-card big-card">
+            <span class="badge">Oferta</span>
+            <div class="product-visual"><i class="ph ph-laptop"></i></div>
+            <h3>Laptop ProBook Ryzen 5</h3>
+            <p>16GB RAM · 512GB SSD · Ideal para estudio y trabajo</p>
+            <strong>S/ 2,499.00</strong>
+          </div>
+          <div class="floating-mini one"><i class="ph ph-headphones"></i> Audífonos -20%</div>
+          <div class="floating-mini two"><i class="ph ph-device-mobile"></i> Celulares en stock</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="trust-section">
+      <div class="container trust-grid">
+        <article><i class="ph ph-credit-card feature-icon"></i> <strong>Pagos seguros</strong><span>Tarjeta, transferencia, Yape y Plin</span></article>
+        <article><i class="ph ph-truck feature-icon"></i> <strong>Envíos a domicilio</strong><span>Ciudad y provincia</span></article>
+        <article><i class="ph ph-shield-check feature-icon"></i> <strong>Garantía</strong><span>Comprobante y soporte postventa</span></article>
+        <article><i class="ph ph-robot feature-icon"></i> <strong>Chatbot integrado</strong><span>Atención rápida en la tienda</span></article>
+      </div>
+    </section>
+
+    <section class="container section" id="productos">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">Catálogo</p>
+          <h2>Productos destacados</h2>
+        </div>
+        <button class="outline-btn" id="metricsBtn">Ver métricas demo</button>
+      </div>
+
+      <div class="filters-panel">
+        <label class="search-box">
+          <span>Buscar</span>
+          <input type="search" id="searchInput" placeholder="Ejemplo: laptop, celular, audífonos..." />
+        </label>
+
+        <label>
+          <span>Categoría</span>
+          <select id="categoryFilter">
+            <option value="all">Todas</option>
+            <option value="Laptops">Laptops</option>
+            <option value="Celulares">Celulares</option>
+            <option value="Tablets">Tablets</option>
+            <option value="Audio">Audio</option>
+            <option value="Accesorios">Accesorios</option>
+            <option value="Impresoras">Impresoras</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Ordenar</span>
+          <select id="sortFilter">
+            <option value="featured">Destacados</option>
+            <option value="priceAsc">Precio menor a mayor</option>
+            <option value="priceDesc">Precio mayor a menor</option>
+            <option value="rating">Mejor valoración</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="category-chips" id="categoryChips" aria-label="Categorías rápidas"></div>
+      <div class="product-grid" id="productGrid"></div>
+    </section>
+
+    <section class="container section" id="ofertas">
+      <div class="promo-banner">
+        <div>
+          <p class="eyebrow">Promoción especial</p>
+          <h2>Usa el cupón <span>INNOV10</span> y obtén 10% de descuento</h2>
+          <p>Aplicable en compras demo mayores a S/ 500. El carrito calcula el descuento automáticamente.</p>
+        </div>
+        <button class="primary-btn" id="applyPromoBtn">Aplicar cupón</button>
+      </div>
+    </section>
+
+    <section class="container section split-section" id="seguimiento">
+      <div>
+        <p class="eyebrow">Pedidos</p>
+        <h2>Seguimiento de compra</h2>
+        <p>Ingresa tu código de pedido generado al finalizar la compra para revisar el estado.</p>
+        <form class="track-form" id="trackForm">
+          <input type="text" id="trackInput" placeholder="Ejemplo: IV-123456" />
+          <button class="primary-btn" type="submit">Consultar</button>
+        </form>
+        <div class="track-result" id="trackResult"></div>
+      </div>
+      <div class="info-card">
+        <h3>Estados disponibles</h3>
+        <ul>
+          <li>Pedido recibido</li>
+          <li>Preparando compra</li>
+          <li>En reparto</li>
+          <li>Entregado</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="container section" id="soporte">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">Ayuda</p>
+          <h2>Preguntas frecuentes</h2>
+        </div>
+      </div>
+      <div class="faq-grid">
+        <details open>
+          <summary>¿Qué métodos de pago aceptan?</summary>
+          <p>Aceptamos tarjeta, transferencia bancaria, Yape, Plin y pago contra entrega en zonas disponibles.</p>
+        </details>
+        <details>
+          <summary>¿Cuánto demora el envío?</summary>
+          <p>De 24 a 48 horas dentro de la ciudad y de 3 a 5 días hábiles para provincia.</p>
+        </details>
+        <details>
+          <summary>¿Los productos tienen garantía?</summary>
+          <p>Sí. La garantía depende del producto y marca. Debes conservar tu comprobante de compra.</p>
+        </details>
+        <details>
+          <summary>¿Puedo pedir ayuda a un asesor?</summary>
+          <p>Sí. El chatbot puede derivarte a un asesor si la consulta requiere atención personalizada.</p>
+        </details>
+      </div>
+    </section>
+  </main>
+  </div>
+
+  <div id="productView" style="display: none; padding-top: 40px; padding-bottom: 100px;" class="container">
+    <button class="outline-btn" id="backToCatalogBtn" style="margin-bottom: 30px;"><i class="ph ph-arrow-left"></i> Volver al catálogo</button>
+    <div id="productPageContent"></div>
+  </div>
+
+  <aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
+    <div class="drawer-header">
+      <h2>Tu carrito</h2>
+      <button class="icon-btn" id="closeCartBtn"><i class="ph ph-x"></i></button>
+    </div>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="coupon-row">
+      <input type="text" id="couponInput" placeholder="Cupón: INNOV10" />
+      <button class="outline-btn" id="couponBtn">Aplicar</button>
+    </div>
+    <div class="cart-summary" id="cartSummary"></div>
+    <button class="primary-btn full" id="checkoutBtn">Finalizar compra</button>
+  </aside>
+  <div class="overlay" id="overlay"></div>
+
+  <dialog class="modal checkout-modal" id="checkoutModal">
+    <button class="icon-btn modal-close" id="closeCheckoutModal"><i class="ph ph-x"></i></button>
+    <h2>Finalizar compra</h2>
+    <form id="checkoutForm" class="checkout-form">
+      <div class="form-grid">
+        <label>Nombre completo <input type="text" name="name" required placeholder="Tu nombre" /></label>
+        <label>Celular <input type="tel" name="phone" required placeholder="999 999 999" /></label>
+        <label>Correo <input type="email" name="email" required placeholder="correo@ejemplo.com" /></label>
+        <label>Método de pago
+          <select name="payment" required>
+            <option value="Tarjeta">Tarjeta</option>
+            <option value="Yape/Plin">Yape/Plin</option>
+            <option value="Transferencia">Transferencia</option>
+            <option value="Contra entrega">Contra entrega</option>
+          </select>
+        </label>
+      </div>
+      <label>Dirección de entrega <textarea name="address" required placeholder="Av. / Jr. / referencia"></textarea></label>
+      <div id="checkoutSummary" class="checkout-summary"></div>
+      <button class="primary-btn full" type="submit">Confirmar pedido</button>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="metricsModal">
+    <button class="icon-btn modal-close" id="closeMetricsModal"><i class="ph ph-x"></i></button>
+    <h2>Métricas demo del E-commerce</h2>
+    <p class="muted">Estas métricas se guardan localmente en el navegador para evidenciar el impacto del chatbot y la tienda.</p>
+    <div class="metrics-grid" id="metricsGrid"></div>
+    <button class="outline-btn" id="resetMetricsBtn">Reiniciar métricas</button>
+  </dialog>
+
+  <div class="chat-widget" id="chatWidget" aria-live="polite">
+    <button class="chat-toggle" id="chatToggle"><i class="ph ph-chat-circle-dots"></i></button>
+    <section class="chat-panel" id="chatPanel" aria-label="Chatbot InnovVentas">
+      <header>
+        <div>
+          <strong>Asistente InnovVentas</strong>
+          <small>En línea · Respuesta automática</small>
+        </div>
+        <button id="closeChatBtn" class="icon-btn"><i class="ph ph-x"></i></button>
+      </header>
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="quick-actions" id="quickActions"></div>
+      <form class="chat-form" id="chatForm">
+        <input type="text" id="chatInput" placeholder="Escribe tu consulta..." autocomplete="off" />
+        <button type="submit">Enviar</button>
+      </form>
+    </section>
+  </div>
+
+  <!-- ===========================================================
+    INTEGRACIÓN CON COPILOT STUDIO
+    1) Publica tu agente en Copilot Studio.
+    2) Entra a Canales / Sitio web personalizado.
+    3) Copia el código HTML o script que te da Copilot.
+    4) Pégalo aquí abajo, antes de cerrar BODY.
+    5) Si usarás el bot de Copilot, en app.js cambia USE_LOCAL_CHATBOT a false.
+    PEGA AQUÍ EL CÓDIGO DEL CHATBOT DE COPILOT STUDIO:
+  ============================================================ -->
+
+  <script src="app.js"></script>
+</body>
+</html>
