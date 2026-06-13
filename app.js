@@ -148,13 +148,67 @@ function renderProducts() {
             <span class="price">${formatMoney(product.price)}</span>
             <span class="rating"><i class="ph-fill ph-star"></i> ${product.rating}</span>
           </div>
-          <div class="card-actions">
-            <button class="primary-btn" data-add="${product.id}" ${disabled} style="width: 100%;">Agregar</button>
+          <div class="card-actions" style="margin-top:20px;display:flex;gap:12px;">
+            <button class="primary-btn" data-add="${product.id}" ${product.stock <= 0 ? 'disabled' : ''} style="flex:1;">Agregar al carrito</button>
           </div>
         </div>
       </article>
     `;
   }).join('');
+
+  if (window.gsap && window.ScrollTrigger) {
+    gsap.utils.toArray('.product-card').forEach(card => {
+      gsap.fromTo(card, 
+        { y: 50, opacity: 0 },
+        {
+          y: 0, opacity: 1, duration: 0.6, ease: 'power2.out',
+          scrollTrigger: {
+            trigger: card,
+            start: "top 90%",
+            toggleActions: "play none none none"
+          }
+        }
+      );
+    });
+  }
+}
+
+function flyToCart(button) {
+  const card = button.closest('.product-card') || button.closest('.product-detail');
+  if (!card) return;
+  const visualEl = card.querySelector('.visual span') || card.querySelector('.visual');
+  if (!visualEl) return;
+  
+  const imgBox = visualEl.getBoundingClientRect();
+  const cartIcon = $('#openCartBtn').getBoundingClientRect();
+  
+  const ghost = visualEl.cloneNode(true);
+  ghost.style.position = 'fixed';
+  ghost.style.left = `${imgBox.left}px`;
+  ghost.style.top = `${imgBox.top}px`;
+  ghost.style.width = `${imgBox.width}px`;
+  ghost.style.height = `${imgBox.height}px`;
+  ghost.style.zIndex = '9999';
+  ghost.style.pointerEvents = 'none';
+  ghost.style.margin = '0';
+  document.body.appendChild(ghost);
+
+  if (window.gsap) {
+    gsap.to(ghost, {
+      x: cartIcon.left + cartIcon.width/2 - (imgBox.left + imgBox.width/2),
+      y: cartIcon.top + cartIcon.height/2 - (imgBox.top + imgBox.height/2),
+      scale: 0.1,
+      opacity: 0,
+      duration: 0.8,
+      ease: "power2.in",
+      onComplete: () => {
+        ghost.remove();
+        gsap.fromTo('#openCartBtn', { scale: 1.2 }, { scale: 1, duration: 0.3, ease: 'back.out(2)' });
+      }
+    });
+  } else {
+    ghost.remove();
+  }
 }
 
 function updateCounters() {
@@ -581,6 +635,7 @@ function setupEvents() {
     const fav = e.target.closest('[data-fav]');
     if (add) {
       e.stopPropagation(); // Evitar que se abra la vista si hizo clic en el botón de agregar
+      flyToCart(add);
       addToCart(Number(add.dataset.add));
       return;
     }
