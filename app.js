@@ -455,34 +455,78 @@ function showToast(message) {
   setTimeout(() => toast.classList.remove('show'), 2200);
 }
 
+function levenshtein(a, b) {
+  const matrix = [];
+  for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+  for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+  for (let i = 1; i <= b.length; i++) {
+    for (let j = 1; j <= a.length; j++) {
+      if (b.charAt(i - 1) === a.charAt(j - 1)) {
+        matrix[i][j] = matrix[i - 1][j - 1];
+      } else {
+        matrix[i][j] = Math.min(matrix[i - 1][j - 1] + 1, Math.min(matrix[i][j - 1] + 1, matrix[i - 1][j] + 1));
+      }
+    }
+  }
+  return matrix[b.length][a.length];
+}
+
 function botReply(text) {
   const msg = text.toLowerCase();
   state.metrics.chatbotMessages += 1;
-  if (msg.includes('asesor') || msg.includes('humano') || msg.includes('persona')) {
+  
+  // Función para detectar coincidencias con tolerancia a errores ortográficos (typos)
+  const match = (keywords) => {
+    const words = msg.replace(/[^\w\sáéíóúüñ]/g, '').split(/\s+/);
+    return keywords.some(kw => {
+      if (msg.includes(kw)) return true;
+      return words.some(w => {
+        if (Math.abs(w.length - kw.length) > 2) return false;
+        const limit = kw.length <= 4 ? 1 : 2; // tolerar 1 o 2 letras de error
+        return levenshtein(w, kw) <= limit;
+      });
+    });
+  };
+
+  if (match(['asesor', 'humano', 'persona', 'agente', 'hablar'])) {
     state.metrics.supportRequests += 1; saveMetrics();
-    return 'Te puedo derivar con un asesor. Déjame tu nombre, número de contacto y el motivo de tu consulta.';
+    return 'Te puedo derivar con un asesor humano. Déjame tu nombre, número de contacto y el motivo de tu consulta, y te contactaremos en breve.';
   }
-  if (msg.includes('hola') || msg.includes('buenas') || msg.includes('ayuda')) return 'Hola, soy el asistente virtual de InnovVentas. Puedo ayudarte con productos, pagos, envíos, garantía, promociones, seguimiento o soporte técnico. ¿Qué necesitas consultar?';
-  if (msg.includes('pago') || msg.includes('yape') || msg.includes('plin') || msg.includes('tarjeta') || msg.includes('transferencia')) return 'Aceptamos tarjeta, transferencia bancaria, Yape, Plin y pago contra entrega en zonas disponibles.';
-  if (msg.includes('envío') || msg.includes('envio') || msg.includes('delivery') || msg.includes('demora') || msg.includes('provincia')) return 'El envío demora 24 a 48 horas dentro de la ciudad y de 3 a 5 días hábiles para provincia.';
-  if (msg.includes('garant')) return 'Todos los productos cuentan con garantía. Debes conservar tu comprobante y el producto no debe presentar daños por mal uso.';
-  if (msg.includes('stock') || msg.includes('disponible') || msg.includes('hay')) return 'Para verificar stock, dime el nombre del producto. También puedes buscarlo en el catálogo y revisar la etiqueta de disponibilidad.';
-  if (msg.includes('oferta') || msg.includes('descuento') || msg.includes('promo') || msg.includes('cupón') || msg.includes('cupon')) return 'Tenemos el cupón INNOV10 para 10% de descuento en compras demo mayores a S/ 500.';
-  if (msg.includes('pedido') || msg.includes('seguimiento') || msg.includes('compra')) return 'Para seguimiento, usa tu código de pedido en la sección "Seguimiento de compra". Si aún no tienes código, finaliza una compra demo.';
-  if (msg.includes('no prende') || msg.includes('no funciona') || msg.includes('fall') || msg.includes('soporte') || msg.includes('carga')) {
+  if (match(['hola', 'buenas', 'ayuda', 'buenos', 'tardes', 'dias', 'saludos'])) return '¡Hola! Soy el asistente inteligente de InnovVentas. Puedo ayudarte con catálogo de productos, pagos, envíos, garantías, ofertas, seguimiento o soporte técnico. ¿En qué te ayudo hoy?';
+  
+  if (match(['pago', 'yape', 'plin', 'tarjeta', 'transferencia', 'pagar', 'efectivo', 'cuotas', 'metodos', 'visa', 'mastercard'])) return '💳 Aceptamos pagos con Tarjeta de crédito/débito (Visa, Mastercard), Transferencia, Yape, Plin y pago contra entrega (solo en Lima). También ofrecemos financiamiento de 3 a 6 cuotas sin intereses.';
+  if (match(['envio', 'delivery', 'demora', 'provincia', 'lima', 'llega', 'mandar', 'enviar', 'costo'])) return '🚚 Sobre los envíos:\n• Lima: Demora 24 a 48 horas (S/ 15 o GRATIS desde S/ 200).\n• Provincias: De 3 a 5 días hábiles vía Olva Courier o Shalom (costo varía según destino).';
+  if (match(['garantia', 'devolucion', 'reembolso', 'falla', 'roto', 'cambio', 'mal'])) return '🛡️ Política de Garantía y Devoluciones:\nTodos los equipos tienen garantía oficial de 12 meses. Aceptamos devoluciones los primeros 7 días por fallas de fábrica. Necesitarás tu boleta o factura.';
+  if (match(['stock', 'disponible', 'hay', 'tienen', 'quedan', 'modelo'])) return '📦 Para verificar el stock exacto, dime el nombre del equipo que buscas o navega por nuestro catálogo web. Nuestro inventario se actualiza en tiempo real.';
+  if (match(['oferta', 'descuento', 'promo', 'cupon', 'rebaja', 'barato', 'promocion'])) return '🏷️ ¡Aprovecha nuestras ofertas!\nUsa el cupón INNOV10 en el checkout para obtener 10% de descuento en compras mayores a S/ 500. Además, revisa nuestra sección de "Ofertas".';
+  if (match(['pedido', 'seguimiento', 'compra', 'rastreo', 'estado', 'donde'])) return '📍 Para rastrear tu pedido, usa la opción "Seguimiento" en el menú principal e ingresa tu código de compra (ej: INV-1234). Si aún no tienes uno, finaliza una compra demo.';
+  if (match(['tienda', 'fisica', 'ubicacion', 'direccion', 'local', 'encuentran'])) return '🏪 Somos una tienda online, pero tenemos un Showroom principal en Av. Tecnología 1024, Miraflores, Lima (Atención Lunes a Sábado de 10am a 7pm).';
+  if (match(['horario', 'hora', 'atienden', 'abierto'])) return '⏰ Nuestro horario de atención con asesores es de Lunes a Sábado de 9am a 8pm. Sin embargo, la web y compras online funcionan 24/7.';
+  if (match(['factura', 'boleta', 'ruc', 'comprobante'])) return '📄 Sí, emitimos Boleta o Factura. Al confirmar tu pedido en el carrito, podrás ingresar tu RUC o DNI y los datos de facturación.';
+  
+  if (match(['prende', 'funciona', 'soporte', 'carga', 'pantalla', 'bateria', 'lento'])) {
     state.metrics.supportRequests += 1; saveMetrics();
-    return 'Primero verifica que el equipo esté cargado, conectado y reinícialo. Si continúa el problema, te derivamos con soporte técnico.';
+    return '🔧 Soporte Técnico:\n1. Verifica que el equipo esté cargado.\n2. Intenta un reinicio forzado.\nSi el problema persiste, indícame tu número de boleta para derivarte a un técnico.';
   }
-  if (msg.includes('laptop') || msg.includes('celular') || msg.includes('tablet') || msg.includes('audífono') || msg.includes('audifono') || msg.includes('producto')) {
-    const found = products.filter(p => msg.includes(p.category.toLowerCase().slice(0, -1)) || msg.includes(p.name.toLowerCase().split(' ')[0])).slice(0, 3);
-    if (found.length) return `Encontré estas opciones:\n${found.map(p => `• ${p.name}: ${formatMoney(p.price)} (${p.stock} en stock)`).join('\n')}`;
-    return 'Contamos con laptops, celulares, tablets, audífonos, impresoras y accesorios. Indícame qué tipo de producto buscas.';
+
+  if (match(['laptop', 'celular', 'tablet', 'audifono', 'impresora', 'accesorio', 'iphone', 'samsung', 'hp', 'lenovo', 'asus'])) {
+    const term = msg.replace(/[^\w\s]/g, '');
+    const found = products.filter(p => {
+      const target = (p.name + ' ' + p.category + ' ' + p.brand).toLowerCase();
+      return term.split(/\s+/).some(w => w.length > 3 && target.includes(w));
+    }).slice(0, 3);
+    
+    if (found.length) return `💻 Encontré estas opciones en el catálogo:\n${found.map(p => `• ${p.name} - ${formatMoney(p.price)}`).join('\n')}\n¿Te gustaría ver los detalles de alguno?`;
+    return 'Contamos con gran variedad de Laptops, Celulares y Tablets. Indícame una marca o tipo de producto para recomendarte opciones.';
   }
-  if (msg.includes('estudio')) return 'Para estudio te recomiendo una laptop con 8GB o 16GB de RAM y SSD. En catálogo puedes revisar la Laptop ProBook Ryzen 5.';
-  if (msg.includes('trabajo')) return 'Para trabajo te recomiendo una laptop con 16GB RAM, SSD y buena pantalla. La Laptop ProBook Ryzen 5 es una buena opción.';
-  if (msg.includes('gaming') || msg.includes('jugar')) return 'Para gaming conviene un equipo con tarjeta gráfica dedicada y 16GB RAM. Revisa la Laptop Gamer Nitro X.';
-  if (msg.includes('gracias') || msg.includes('chau') || msg.includes('adiós') || msg.includes('adios')) return 'Gracias por comunicarte con InnovVentas. Vuelve cuando necesites productos, pagos, envíos o soporte.';
-  return 'Puedo ayudarte con productos, stock, métodos de pago, envíos, garantía, promociones, seguimiento de pedido o soporte técnico. ¿Sobre qué deseas consultar?';
+  
+  if (match(['estudio', 'universidad', 'colegio', 'estudiar'])) return '📚 Para estudiar, recomiendo una Laptop Core i5 o Ryzen 5, con 8GB RAM y SSD (desde S/ 1,899). Revisa nuestras opciones HP o Lenovo en catálogo.';
+  if (match(['trabajo', 'oficina', 'programar', 'ingenieria'])) return '💼 Para trabajo profesional, te sugiero una Laptop con 16GB RAM y buena batería. Te recomiendo revisar los modelos de ASUS y Lenovo IdeaPad.';
+  if (match(['gaming', 'jugar', 'juegos', 'gamer'])) return '🎮 Para gaming necesitas Tarjeta Gráfica y buena ventilación. Revisa nuestras opciones ASUS ROG o escribe "Gamer" en el buscador.';
+
+  if (match(['gracias', 'chau', 'adios', 'ok', 'vale', 'listo', 'entendido'])) return '¡Gracias a ti por comunicarte con InnovVentas! Estaré por aquí si tienes más consultas. ¡Que tengas un gran día! 👋';
+  
+  return 'Hmm, no estoy seguro de entender esa consulta. 🤔\n\nPuedo ayudarte con:\n• Catálogo y Stock\n• Envíos y Delivery\n• Pagos y Facturación\n• Ofertas\n• Garantía\n\nO puedes escribir "Asesor" para hablar con un humano.';
 }
 
 function addChatMessage(text, sender = 'bot') {
