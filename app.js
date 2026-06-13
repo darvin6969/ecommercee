@@ -1,5 +1,5 @@
 /*
-  InnovVentas E-commerce demo
+  InnovVentas E-commerce
   Cambia este valor a false si vas a pegar el código oficial de Copilot Studio en index.html.
 */
 const USE_LOCAL_CHATBOT = true;
@@ -548,7 +548,7 @@ function createOrder(formData) {
 
 function trackOrder(code) {
   const order = state.orders.find(o => o.id.toLowerCase() === code.toLowerCase());
-  if (!order) return `<strong>No se encontró el pedido.</strong><p class="muted">Verifica el código o realiza una compra demo para generar uno.</p>`;
+  if (!order) return `<strong>No se encontró el pedido.</strong><p class="muted">Verifica el código o realiza una compra para generar uno.</p>`;
   return `<strong>Pedido ${order.id}</strong><p>Estado: <strong>${order.status}</strong></p><p>Fecha: ${order.date}</p><p>Total: ${formatMoney(order.total)}</p>`;
 }
 
@@ -629,7 +629,7 @@ function botReply(text) {
   if (match(['garantia', 'devolucion', 'reembolso', 'falla', 'roto', 'cambio', 'mal'])) return '🛡️ Política de Garantía y Devoluciones:\nTodos los equipos tienen garantía oficial de 12 meses. Aceptamos devoluciones los primeros 7 días por fallas de fábrica. Necesitarás tu boleta o factura.';
   if (match(['stock', 'disponible', 'hay', 'tienen', 'quedan', 'modelo'])) return '📦 Para verificar el stock exacto, dime el nombre del equipo que buscas o navega por nuestro catálogo web. Nuestro inventario se actualiza en tiempo real.';
   if (match(['oferta', 'descuento', 'promo', 'cupon', 'rebaja', 'barato', 'promocion'])) return '🏷️ ¡Aprovecha nuestras ofertas!\nUsa el cupón INNOV10 en el checkout para obtener 10% de descuento en compras mayores a S/ 500. Además, revisa nuestra sección de "Ofertas".';
-  if (match(['pedido', 'seguimiento', 'compra', 'rastreo', 'estado', 'donde'])) return '📍 Para rastrear tu pedido, usa la opción "Seguimiento" en el menú principal e ingresa tu código de compra (ej: INV-1234). Si aún no tienes uno, finaliza una compra demo.';
+  if (match(['pedido', 'seguimiento', 'compra', 'rastreo', 'estado', 'donde'])) return 'Para rastrear tu pedido, usa la opción "Seguimiento" en el menú principal e ingresa tu código de compra (ej: INV-1234). Si aún no tienes uno, finaliza una compra para generar uno.';
   if (match(['tienda', 'fisica', 'ubicacion', 'direccion', 'local', 'encuentran'])) return '🏪 Somos una tienda online, pero tenemos un Showroom principal en Av. Tecnología 1024, Miraflores, Lima (Atención Lunes a Sábado de 10am a 7pm).';
   if (match(['horario', 'hora', 'atienden', 'abierto'])) return '⏰ Nuestro horario de atención con asesores es de Lunes a Sábado de 9am a 8pm. Sin embargo, la web y compras online funcionan 24/7.';
   if (match(['factura', 'boleta', 'ruc', 'comprobante'])) return '📄 Sí, emitimos Boleta o Factura. Al confirmar tu pedido en el carrito, podrás ingresar tu RUC o DNI y los datos de facturación.';
@@ -704,7 +704,7 @@ function botReply(text) {
   if (match(['manual', 'instrucciones', 'como usar', 'tutorial', 'configurar'])) return 'Los manuales de uso están incluidos en la caja del producto. También puedes encontrar tutoriales oficiales en la web del fabricante. Si tienes una duda específica, dímela y te oriento.';
 
   // Cuenta y pedidos
-  if (match(['cuenta', 'registro', 'iniciar sesion', 'login', 'contraseña'])) return 'Esta es una tienda demo, por lo que no requiere registro de cuenta. Puedes comprar directamente sin iniciar sesión.';
+  if (match(['cuenta', 'registro', 'iniciar sesion', 'login', 'contraseña'])) return 'No se requiere registro de cuenta. Puedes comprar directamente sin iniciar sesión.';
   if (match(['historial', 'mis pedidos', 'mis compras', 'anteriores'])) return 'Tus pedidos realizados en esta sesión se guardan en el navegador. Puedes rastrearlos en la sección "Seguimiento" del menú usando tu código de pedido.';
   if (match(['codigo', 'numero de pedido', 'id', 'referencia'])) return 'Al confirmar tu compra, recibirás un código de pedido con formato IV-XXXXXX. Guárdalo para hacer seguimiento desde la sección "Seguimiento" del menú.';
   if (match(['facturacion', 'empresa', 'negocio', 'corporativo', 'ruc'])) return 'Emitimos facturas para empresas. Al finalizar tu pedido, indica tu RUC y razón social en el campo correspondiente del formulario de compra.';
@@ -729,7 +729,7 @@ function botReply(text) {
   if (match(['garantia extendida', 'seguro de equipo', 'proteccion adicional'])) return 'Ofrecemos garantía extendida por 1 año adicional al costar S/ 99 para equipos mayores a S/ 1,500. Incluye protección contra golpes y líquidos. Consulta disponibilidad al confirmar tu pedido.';
   if (match(['instalacion', 'configuracion', 'instalar', 'configurar mi equipo'])) return 'Ofrecemos servicio de configuración inicial para tu equipo nuevo por S/ 49. Incluye instalación de drivers, Office, antivirus y transferencia de archivos. Coordínalo al momento de comprar.';
   if (match(['canje', 'canjear', 'puntos', 'fidelidad', 'descuento cliente'])) return 'Actualmente estamos desarrollando nuestro programa de fidelidad. Por ahora puedes usar el cupón INNOV10 para obtener un 10% de descuento en tu primera compra mayor a S/ 500.';
-  if (match(['demo', 'prueba', 'ver funcionar', 'probar'])) return 'Esta es una tienda demo completamente funcional. Puedes explorar productos, agregar al carrito, usar el cupón INNOV10 y simular una compra completa para ver cómo funciona el proceso.';
+  if (match(['demo', 'prueba', 'ver funcionar', 'probar'])) return 'Puedes explorar productos, agregar al carrito, usar el cupón INNOV10 y simular una compra completa para ver cómo funciona el proceso.';
 
   return 'No estoy seguro de entender esa consulta.\n\nPuedo ayudarte con:\n• Catalogo y Stock\n• Envios y Delivery\n• Pagos y Facturacion\n• Ofertas y Cupones\n• Garantia y Soporte\n• Informacion de la tienda\n\nEscribe "Asesor" si prefieres hablar con una persona.';
 }
