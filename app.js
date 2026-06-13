@@ -149,8 +149,7 @@ function renderProducts() {
             <span class="rating"><i class="ph-fill ph-star"></i> ${product.rating}</span>
           </div>
           <div class="card-actions">
-            <button class="outline-btn" style="pointer-events:none">Ver detalles</button>
-            <button class="primary-btn" data-add="${product.id}" ${disabled}>Agregar</button>
+            <button class="primary-btn" data-add="${product.id}" ${disabled} style="width: 100%;">Agregar</button>
           </div>
         </div>
       </article>

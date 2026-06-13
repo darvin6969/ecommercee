@@ -383,3 +383,16 @@ details p { color: var(--muted); line-height: 1.7; margin-top: 16px; margin-bott
 [data-theme="light"] .fala-btn { background: var(--text); color: #fff; }
 [data-theme="light"] .fala-btn:hover { background: var(--primary); }
 [data-theme="light"] .fala-fav { background: #fff; border-color: rgba(0,0,0,0.1); }
+
+/* Animación de Agregar al carrito en Hover */
+@media (hover: hover) {
+  .product-card .card-actions {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  .product-card:hover .card-actions {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
