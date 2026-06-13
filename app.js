@@ -636,3 +636,10 @@ renderProducts();
 renderCart();
 setupEvents();
 updateThemeIcon(savedTheme);
+
+// Exponer funciones globales para eventos inline en HTML
+window.addToCart = addToCart;
+window.openCart = openCart;
+window.toggleFavorite = toggleFavorite;
+window.changeFalaMainImg = changeFalaMainImg;
+window.toggleFavoriteDetail = toggleFavoriteDetail;
