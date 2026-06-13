@@ -158,7 +158,7 @@ function renderProducts() {
 
   if (window.gsap && window.ScrollTrigger) {
     gsap.utils.toArray('.product-card').forEach(card => {
-      gsap.fromTo(card, 
+      gsap.fromTo(card,
         { y: 50, opacity: 0 },
         {
           y: 0, opacity: 1, duration: 0.6, ease: 'power2.out',
@@ -176,7 +176,7 @@ function renderProducts() {
 function renderCarousel() {
   const container = document.getElementById('topCarousel');
   if (!container) return;
-  
+
   const banners = [
     'https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=1200&h=400&q=80',
     'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=1200&h=400&q=80',
@@ -185,36 +185,48 @@ function renderCarousel() {
   ];
 
   container.innerHTML = banners.map(url => `
-    <article class="banner-slide" style="min-width: 100%; scroll-snap-align: center; border-radius: 16px; overflow: hidden; flex-shrink: 0;">
-      <img src="${url}" alt="Promoción Especial" style="width: 100%; height: 350px; object-fit: cover; display: block;" />
+    <article class="banner-slide">
+      <img src="${url}" alt="Promoción Especial" loading="lazy" style="width:100%; height:350px; object-fit:cover; display:block;" />
     </article>
   `).join('');
 
-  document.getElementById('scrollLeftBtn').addEventListener('click', () => {
-    container.scrollBy({ left: -container.clientWidth, behavior: 'smooth' });
-  });
-  document.getElementById('scrollRightBtn').addEventListener('click', () => {
-    container.scrollBy({ left: container.clientWidth, behavior: 'smooth' });
+  const indicators = document.getElementById('carouselIndicators');
+  indicators.innerHTML = '';
+  banners.forEach((_, idx) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (idx === 0 ? ' active' : '');
+    dot.addEventListener('click', () => container.scrollTo({ left: idx * container.clientWidth, behavior: 'smooth' }));
+    indicators.appendChild(dot);
   });
 
-  // Auto-scroll dinámico
-  const startAutoScroll = () => {
-    return setInterval(() => {
-      if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 10) {
-        container.scrollTo({ left: 0, behavior: 'smooth' });
-      } else {
-        container.scrollBy({ left: container.clientWidth, behavior: 'smooth' });
-      }
-    }, 3500);
+  const updateActiveDot = () => {
+    const index = Math.round(container.scrollLeft / container.clientWidth);
+    indicators.querySelectorAll('.dot').forEach((dot, i) => dot.classList.toggle('active', i === index));
   };
+  container.addEventListener('scroll', () => requestAnimationFrame(updateActiveDot));
+
+  // Touch swipe
+  let startX = 0;
+  container.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; });
+  container.addEventListener('touchend', (e) => {
+    const diff = e.changedTouches[0].clientX - startX;
+    if (Math.abs(diff) > 50) container.scrollBy({ left: diff > 0 ? -container.clientWidth : container.clientWidth, behavior: 'smooth' });
+  });
+
+  document.getElementById('scrollLeftBtn').addEventListener('click', () => container.scrollBy({ left: -container.clientWidth, behavior: 'smooth' }));
+  document.getElementById('scrollRightBtn').addEventListener('click', () => container.scrollBy({ left: container.clientWidth, behavior: 'smooth' }));
+
+  const startAutoScroll = () => setInterval(() => {
+    if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 10) {
+      container.scrollTo({ left: 0, behavior: 'smooth' });
+    } else {
+      container.scrollBy({ left: container.clientWidth, behavior: 'smooth' });
+    }
+  }, 3500);
 
   let autoScrollInterval = startAutoScroll();
-
   container.addEventListener('mouseenter', () => clearInterval(autoScrollInterval));
-  container.addEventListener('mouseleave', () => {
-    clearInterval(autoScrollInterval);
-    autoScrollInterval = startAutoScroll();
-  });
+  container.addEventListener('mouseleave', () => { clearInterval(autoScrollInterval); autoScrollInterval = startAutoScroll(); });
 }
 
 function flyToCart(button) {
@@ -222,10 +234,10 @@ function flyToCart(button) {
   if (!card) return;
   const visualEl = card.querySelector('.visual span') || card.querySelector('.visual');
   if (!visualEl) return;
-  
+
   const imgBox = visualEl.getBoundingClientRect();
   const cartIcon = $('#openCartBtn').getBoundingClientRect();
-  
+
   const ghost = visualEl.cloneNode(true);
   ghost.style.position = 'fixed';
   ghost.style.left = `${imgBox.left}px`;
@@ -239,8 +251,8 @@ function flyToCart(button) {
 
   if (window.gsap) {
     gsap.to(ghost, {
-      x: cartIcon.left + cartIcon.width/2 - (imgBox.left + imgBox.width/2),
-      y: cartIcon.top + cartIcon.height/2 - (imgBox.top + imgBox.height/2),
+      x: cartIcon.left + cartIcon.width / 2 - (imgBox.left + imgBox.width / 2),
+      y: cartIcon.top + cartIcon.height / 2 - (imgBox.top + imgBox.height / 2),
       scale: 0.1,
       opacity: 0,
       duration: 0.8,
@@ -319,17 +331,17 @@ function openProductPage(id) {
   if (!product) return;
   state.metrics.productViews += 1;
   saveMetrics();
-  
+
   const originalPrice = product.price * 1.35;
   const internetPrice = product.price * 1.05;
   const cmrPrice = product.price;
-  
+
   // Specs dinámicos a 2 columnas
   const specs = product.specs && product.specs.length ? product.specs : ['Procesador de alto rendimiento', '8GB RAM', 'Diseño ultraligero', 'Batería larga duración'];
   const half = Math.ceil(specs.length / 2);
   const col1 = specs.slice(0, half).map(s => `<li>• <span>${s}</span></li>`).join('');
   const col2 = specs.slice(half).map(s => `<li>• <span>${s}</span></li>`).join('');
-  
+
   // Favorito activo
   const isFav = state.favorites.includes(product.id);
   const favIcon = isFav ? '<i class="ph-fill ph-heart" style="color:#d10024"></i>' : '<i class="ph ph-heart"></i>';
@@ -390,17 +402,17 @@ function openProductPage(id) {
           <a href="#" class="fala-more-specs">Ver más especificaciones</a>
         </div>
       </div>
-      
-      <!-- 3. AI Cross-Selling Recommendations -->
-      <div class="fala-related" style="margin-top: 40px; border-top: var(--glass-border); padding-top: 20px;">
-        <h3 style="font-size: 1.2rem; margin-bottom: 20px; color: var(--primary);">También te podría interesar</h3>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+
+      <!-- También te podría interesar -->
+      <div class="fala-related" style="margin-top:40px; border-top:var(--glass-border); padding-top:20px;">
+        <h3 style="font-size:1.2rem; margin-bottom:20px; color:var(--primary);">También te podría interesar</h3>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:20px;">
           ${products.filter(p => p.id !== product.id && p.category !== product.category).sort(() => 0.5 - Math.random()).slice(0, 4).map(p => `
             <div class="product-card" onclick="openProductPage(${p.id})" style="cursor:pointer; transform:none; animation:none; margin:0;">
-              <div class="visual" style="height:150px; font-size:4rem; border-radius: 12px 12px 0 0;">${p.icon}</div>
-              <div class="card-body" style="padding:15px; border-radius: 0 0 12px 12px;">
-                <h4 style="font-size:0.9rem; margin-bottom:10px; font-weight: 600;">${p.name}</h4>
-                <span class="price" style="font-size:1.1rem; color: var(--primary); font-weight: 800;">${formatMoney(p.price)}</span>
+              <div class="visual" style="height:150px; font-size:4rem; border-radius:12px 12px 0 0;">${p.icon}</div>
+              <div class="card-body" style="padding:15px; border-radius:0 0 12px 12px;">
+                <h4 style="font-size:0.9rem; margin-bottom:10px; font-weight:600;">${p.name}</h4>
+                <span class="price" style="font-size:1.1rem; color:var(--primary); font-weight:800;">${formatMoney(p.price)}</span>
               </div>
             </div>
           `).join('')}
@@ -408,33 +420,33 @@ function openProductPage(id) {
       </div>
     </div>
   `;
-  
+
   $('#mainView').style.display = 'none';
   $('#productView').style.display = 'block';
   window.scrollTo({ top: 0, behavior: 'smooth' });
-  
+
   setupZoom();
 }
 
 function setupZoom() {
   const container = document.getElementById('falaMainImgContainer');
   if (!container) return;
-  
+
   container.addEventListener('mousemove', (e) => {
     const img = container.querySelector('img');
     if (!img) return;
-    
+
     const rect = container.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    
+
     const xPercent = (x / rect.width) * 100;
     const yPercent = (y / rect.height) * 100;
-    
+
     img.style.transformOrigin = `${xPercent}% ${yPercent}%`;
     img.style.transform = 'scale(2.2)';
   });
-  
+
   container.addEventListener('mouseleave', () => {
     const img = container.querySelector('img');
     if (img) {
@@ -451,10 +463,10 @@ function changeFalaMainImg(thumbElem, productId) {
   document.getElementById('falaMainImgContainer').innerHTML = imgHtml;
   // Pequeño efecto visual
   const img = document.querySelector('#falaMainImgContainer img');
-  if(img) {
-      img.style.opacity = 0;
-      setTimeout(() => img.style.opacity = 1, 50);
-      img.style.transition = 'opacity 0.2s';
+  if (img) {
+    img.style.opacity = 0;
+    setTimeout(() => img.style.opacity = 1, 50);
+    img.style.transition = 'opacity 0.2s';
   }
 }
 
@@ -463,7 +475,7 @@ function toggleFavoriteDetail(id) {
   const isFav = state.favorites.includes(id);
   const btn = document.getElementById('detailFavBtn');
   if (btn) {
-      btn.innerHTML = isFav ? '<i class="ph-fill ph-heart" style="color:#d10024"></i>' : '<i class="ph ph-heart"></i>';
+    btn.innerHTML = isFav ? '<i class="ph-fill ph-heart" style="color:#d10024"></i>' : '<i class="ph ph-heart"></i>';
   }
 }
 
@@ -536,6 +548,26 @@ function trackOrder(code) {
   return `<strong>Pedido ${order.id}</strong><p>Estado: <strong>${order.status}</strong></p><p>Fecha: ${order.date}</p><p>Total: ${formatMoney(order.total)}</p>`;
 }
 
+function renderMetrics() {
+  const details = getCartDetails();
+  const estimatedAbandonment = details.items.length ? 1 : 0;
+  state.metrics.cartAbandonment = Math.max(state.metrics.cartAbandonment, estimatedAbandonment);
+  saveMetrics();
+  const metrics = [
+    ['Visitas', state.metrics.visits],
+    ['Vistas de productos', state.metrics.productViews],
+    ['Agregados al carrito', state.metrics.addToCart],
+    ['Intentos de checkout', state.metrics.checkouts],
+    ['Pedidos generados', state.metrics.orders],
+    ['Aperturas del chatbot', state.metrics.chatbotOpens],
+    ['Mensajes al chatbot', state.metrics.chatbotMessages],
+    ['Solicitudes de soporte', state.metrics.supportRequests],
+    ['Carritos activos', state.cart.length],
+  ];
+  $('#metricsGrid').innerHTML = metrics.map(([label, value]) => `
+    <article class="metric-card"><strong>${value}</strong><span>${label}</span></article>
+  `).join('');
+}
 
 function showToast(message) {
   let toast = $('.toast');
@@ -568,7 +600,7 @@ function levenshtein(a, b) {
 function botReply(text) {
   const msg = text.toLowerCase();
   state.metrics.chatbotMessages += 1;
-  
+
   // Función para detectar coincidencias con tolerancia a errores ortográficos (typos)
   const match = (keywords) => {
     const words = msg.replace(/[^\w\sáéíóúüñ]/g, '').split(/\s+/);
@@ -582,22 +614,12 @@ function botReply(text) {
     });
   };
 
-  // 1. Multilingual Support (Simulated Translator)
-  // English
-  if (match(['hello', 'hi', 'morning', 'help', 'english'])) return 'Hello! I am the InnovVentas intelligent assistant. I can help you with products, payments, shipping, warranties, and more. How can I assist you today?';
-  if (match(['buy', 'price', 'cost'])) return '💻 We have a wide variety of Tech products available! Please browse our catalog. If you need a specific model, let me know.';
-  if (match(['shipping', 'delivery'])) return '🚚 We ship nationwide. Deliveries in Lima take 24-48 hours. For other cities, it takes 3-5 business days.';
-  // Portuguese
-  if (match(['olá', 'bom', 'dia', 'ajuda', 'tarde', 'portugues'])) return 'Olá! Sou o assistente inteligente da InnovVentas. Posso ajudá-lo com nosso catálogo de produtos, pagamentos, envios, e mais. Como posso ajudar hoje?';
-  if (match(['comprar', 'preço', 'custo'])) return '💻 Temos uma grande variedade de Laptops e Celulares! Fique à vontade para explorar nosso catálogo.';
-  if (match(['frete', 'entrega'])) return '🚚 Fazemos envios para todo o país. Em Lima, a entrega leva de 24 a 48 horas.';
-
   if (match(['asesor', 'humano', 'persona', 'agente', 'hablar'])) {
     state.metrics.supportRequests += 1; saveMetrics();
     return 'Te puedo derivar con un asesor humano. Déjame tu nombre, número de contacto y el motivo de tu consulta, y te contactaremos en breve.';
   }
   if (match(['hola', 'buenas', 'ayuda', 'buenos', 'tardes', 'dias', 'saludos'])) return '¡Hola! Soy el asistente inteligente de InnovVentas. Puedo ayudarte con catálogo de productos, pagos, envíos, garantías, ofertas, seguimiento o soporte técnico. ¿En qué te ayudo hoy?';
-  
+
   if (match(['pago', 'yape', 'plin', 'tarjeta', 'transferencia', 'pagar', 'efectivo', 'cuotas', 'metodos', 'visa', 'mastercard'])) return '💳 Aceptamos pagos con Tarjeta de crédito/débito (Visa, Mastercard), Transferencia, Yape, Plin y pago contra entrega (solo en Lima). También ofrecemos financiamiento de 3 a 6 cuotas sin intereses.';
   if (match(['envio', 'delivery', 'demora', 'provincia', 'lima', 'llega', 'mandar', 'enviar', 'costo'])) return '🚚 Sobre los envíos:\n• Lima: Demora 24 a 48 horas (S/ 15 o GRATIS desde S/ 200).\n• Provincias: De 3 a 5 días hábiles vía Olva Courier o Shalom (costo varía según destino).';
   if (match(['garantia', 'devolucion', 'reembolso', 'falla', 'roto', 'cambio', 'mal'])) return '🛡️ Política de Garantía y Devoluciones:\nTodos los equipos tienen garantía oficial de 12 meses. Aceptamos devoluciones los primeros 7 días por fallas de fábrica. Necesitarás tu boleta o factura.';
@@ -607,7 +629,7 @@ function botReply(text) {
   if (match(['tienda', 'fisica', 'ubicacion', 'direccion', 'local', 'encuentran'])) return '🏪 Somos una tienda online, pero tenemos un Showroom principal en Av. Tecnología 1024, Miraflores, Lima (Atención Lunes a Sábado de 10am a 7pm).';
   if (match(['horario', 'hora', 'atienden', 'abierto'])) return '⏰ Nuestro horario de atención con asesores es de Lunes a Sábado de 9am a 8pm. Sin embargo, la web y compras online funcionan 24/7.';
   if (match(['factura', 'boleta', 'ruc', 'comprobante'])) return '📄 Sí, emitimos Boleta o Factura. Al confirmar tu pedido en el carrito, podrás ingresar tu RUC o DNI y los datos de facturación.';
-  
+
   if (match(['prende', 'funciona', 'soporte', 'carga', 'pantalla', 'bateria', 'lento'])) {
     state.metrics.supportRequests += 1; saveMetrics();
     return '🔧 Soporte Técnico:\n1. Verifica que el equipo esté cargado.\n2. Intenta un reinicio forzado.\nSi el problema persiste, indícame tu número de boleta para derivarte a un técnico.';
@@ -619,17 +641,17 @@ function botReply(text) {
       const target = (p.name + ' ' + p.category + ' ' + p.brand).toLowerCase();
       return term.split(/\s+/).some(w => w.length > 3 && target.includes(w));
     }).slice(0, 3);
-    
+
     if (found.length) return `💻 Encontré estas opciones en el catálogo:\n${found.map(p => `• ${p.name} - ${formatMoney(p.price)}`).join('\n')}\n¿Te gustaría ver los detalles de alguno?`;
     return 'Contamos con gran variedad de Laptops, Celulares y Tablets. Indícame una marca o tipo de producto para recomendarte opciones.';
   }
-  
+
   if (match(['estudio', 'universidad', 'colegio', 'estudiar'])) return '📚 Para estudiar, recomiendo una Laptop Core i5 o Ryzen 5, con 8GB RAM y SSD (desde S/ 1,899). Revisa nuestras opciones HP o Lenovo en catálogo.';
   if (match(['trabajo', 'oficina', 'programar', 'ingenieria'])) return '💼 Para trabajo profesional, te sugiero una Laptop con 16GB RAM y buena batería. Te recomiendo revisar los modelos de ASUS y Lenovo IdeaPad.';
   if (match(['gaming', 'jugar', 'juegos', 'gamer'])) return '🎮 Para gaming necesitas Tarjeta Gráfica y buena ventilación. Revisa nuestras opciones ASUS ROG o escribe "Gamer" en el buscador.';
 
   if (match(['gracias', 'chau', 'adios', 'ok', 'vale', 'listo', 'entendido'])) return '¡Gracias a ti por comunicarte con InnovVentas! Estaré por aquí si tienes más consultas. ¡Que tengas un gran día! 👋';
-  
+
   return 'Hmm, no estoy seguro de entender esa consulta. 🤔\n\nPuedo ayudarte con:\n• Catálogo y Stock\n• Envíos y Delivery\n• Pagos y Facturación\n• Ofertas\n• Garantía\n\nO puedes escribir "Asesor" para hablar con un humano.';
 }
 
@@ -660,7 +682,7 @@ function openChat() {
 function setupEvents() {
   // Navegación suave sin cambiar la URL (mantiene localhost:5173 limpio)
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
+    anchor.addEventListener('click', function (e) {
       e.preventDefault();
       const targetId = this.getAttribute('href').substring(1);
       const targetElement = document.getElementById(targetId);
@@ -704,7 +726,7 @@ function setupEvents() {
   $('#themeToggleBtn').addEventListener('click', (e) => {
     const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    
+
     const toggleTheme = () => {
       document.documentElement.setAttribute('data-theme', newTheme);
       localStorage.setItem('theme', newTheme);
@@ -772,6 +794,9 @@ function setupEvents() {
     $('#trackResult').innerHTML = trackOrder($('#trackInput').value.trim());
   });
 
+  $('#metricsBtn').addEventListener('click', () => { renderMetrics(); $('#metricsModal').showModal(); });
+  $('#closeMetricsModal').addEventListener('click', () => $('#metricsModal').close());
+  $('#resetMetricsBtn').addEventListener('click', () => { state.metrics = { ...defaultMetrics, visits: 1 }; saveMetrics(); renderMetrics(); showToast('Métricas reiniciadas'); });
 
   if (!USE_LOCAL_CHATBOT) {
     $('#chatWidget').style.display = 'none';
@@ -823,7 +848,7 @@ function setupEvents() {
         micBtn.classList.remove('mic-active');
         showToast('Error al escuchar. Intenta de nuevo.');
       };
-      
+
       recognition.onend = () => {
         micBtn.classList.remove('mic-active');
       };
@@ -850,21 +875,6 @@ renderCarousel();
 renderCart();
 setupEvents();
 updateThemeIcon(savedTheme);
-
-// 4. Simulated Live Sales Notifications (Social Proof)
-function simulateLiveSales() {
-  const cities = ['Lima', 'Arequipa', 'Trujillo', 'Cusco', 'Piura'];
-  const names = ['Carlos', 'Ana', 'Luis', 'María', 'Jorge', 'Lucía'];
-  setInterval(() => {
-    if (Math.random() > 0.4) {
-      const city = cities[Math.floor(Math.random() * cities.length)];
-      const name = names[Math.floor(Math.random() * names.length)];
-      const product = products[Math.floor(Math.random() * products.length)];
-      showToast(`[Nuevo pedido] ${name} de ${city} acaba de comprar: ${product.name}`);
-    }
-  }, 15000); // Intenta cada 15 segundos
-}
-setTimeout(simulateLiveSales, 5000);
 
 // Exponer funciones globales para eventos inline en HTML
 window.addToCart = addToCart;
@@ -897,3 +907,18 @@ if (window.gsap) {
     delay: 0.8
   });
 }
+
+// Notificaciones de ventas en vivo
+function simulateLiveSales() {
+  const cities = ['Lima', 'Arequipa', 'Trujillo', 'Cusco', 'Piura'];
+  const names = ['Carlos', 'Ana', 'Luis', 'María', 'Jorge', 'Lucía'];
+  setInterval(() => {
+    if (Math.random() > 0.4) {
+      const city = cities[Math.floor(Math.random() * cities.length)];
+      const name = names[Math.floor(Math.random() * names.length)];
+      const product = products[Math.floor(Math.random() * products.length)];
+      showToast(`[Nuevo pedido] ${name} de ${city} acaba de comprar: ${product.name}`);
+    }
+  }, 15000);
+}
+setTimeout(simulateLiveSales, 5000);
