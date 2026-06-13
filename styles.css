@@ -1473,10 +1473,11 @@ details p {
 }
 
 .chat-panel {
-  position: absolute;
-  right: 0;
-  bottom: 90px;
+  position: fixed;
+  right: 30px;
+  bottom: 110px;
   width: min(400px, calc(100vw - 40px));
+  max-height: calc(100vh - 150px);
   height: 600px;
   background: rgba(15, 15, 15, 0.95);
   border: var(--glass-border);

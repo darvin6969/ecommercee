@@ -205,24 +205,28 @@ function renderCarousel() {
   };
   container.addEventListener('scroll', () => requestAnimationFrame(updateActiveDot));
 
+  // Infinite loop carousel using index tracking
+  let currentIndex = 0;
+  const total = banners.length;
+
+  const goToSlide = (index) => {
+    currentIndex = (index + total) % total;
+    container.scrollTo({ left: currentIndex * container.clientWidth, behavior: 'smooth' });
+    indicators.querySelectorAll('.dot').forEach((dot, i) => dot.classList.toggle('active', i === currentIndex));
+  };
+
+  document.getElementById('scrollLeftBtn').addEventListener('click', () => goToSlide(currentIndex - 1));
+  document.getElementById('scrollRightBtn').addEventListener('click', () => goToSlide(currentIndex + 1));
+
   // Touch swipe
   let startX = 0;
   container.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; });
   container.addEventListener('touchend', (e) => {
     const diff = e.changedTouches[0].clientX - startX;
-    if (Math.abs(diff) > 50) container.scrollBy({ left: diff > 0 ? -container.clientWidth : container.clientWidth, behavior: 'smooth' });
+    if (Math.abs(diff) > 50) goToSlide(diff > 0 ? currentIndex - 1 : currentIndex + 1);
   });
 
-  document.getElementById('scrollLeftBtn').addEventListener('click', () => container.scrollBy({ left: -container.clientWidth, behavior: 'smooth' }));
-  document.getElementById('scrollRightBtn').addEventListener('click', () => container.scrollBy({ left: container.clientWidth, behavior: 'smooth' }));
-
-  const startAutoScroll = () => setInterval(() => {
-    if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 10) {
-      container.scrollTo({ left: 0, behavior: 'smooth' });
-    } else {
-      container.scrollBy({ left: container.clientWidth, behavior: 'smooth' });
-    }
-  }, 3500);
+  const startAutoScroll = () => setInterval(() => goToSlide(currentIndex + 1), 3500);
 
   let autoScrollInterval = startAutoScroll();
   container.addEventListener('mouseenter', () => clearInterval(autoScrollInterval));
