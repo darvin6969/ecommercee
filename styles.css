@@ -423,3 +423,21 @@ details p { color: var(--muted); line-height: 1.7; margin-top: 16px; margin-bott
   color: #ef4444 !important;
   animation: mic-pulse 1s infinite;
 }
+
+/* Carrusel de Productos */
+.carousel-container {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 20px;
+  scrollbar-width: none;
+}
+.carousel-container::-webkit-scrollbar {
+  display: none;
+}
+.carousel-container .product-card {
+  min-width: 280px;
+  scroll-snap-align: start;
+  flex-shrink: 0;
+}

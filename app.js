@@ -173,6 +173,30 @@ function renderProducts() {
   }
 }
 
+function renderCarousel() {
+  const topProducts = products.filter(p => p.rating >= 4.6).slice(0, 8);
+  const container = document.getElementById('topCarousel');
+  if (!container) return;
+  
+  container.innerHTML = topProducts.map(product => `
+    <article class="product-card" onclick="openProductPage(${product.id})" style="cursor:pointer; transform:none; animation:none;">
+      <div class="visual" style="height:180px; font-size:5rem; border-radius: 12px 12px 0 0;">${product.icon}</div>
+      <div class="card-body" style="padding:15px; border-radius: 0 0 12px 12px;">
+        <small class="muted">${product.category}</small>
+        <h4 style="font-size:1rem; margin-bottom:10px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${product.name}</h4>
+        <span class="price" style="font-size:1.1rem; color: var(--primary); font-weight: 800;">${formatMoney(product.price)}</span>
+      </div>
+    </article>
+  `).join('');
+
+  document.getElementById('scrollLeftBtn').addEventListener('click', () => {
+    container.scrollBy({ left: -300, behavior: 'smooth' });
+  });
+  document.getElementById('scrollRightBtn').addEventListener('click', () => {
+    container.scrollBy({ left: 300, behavior: 'smooth' });
+  });
+}
+
 function flyToCart(button) {
   const card = button.closest('.product-card') || button.closest('.product-detail');
   if (!card) return;
@@ -825,6 +849,7 @@ function setupEvents() {
 }
 
 renderProducts();
+renderCarousel();
 renderCart();
 setupEvents();
 updateThemeIcon(savedTheme);
