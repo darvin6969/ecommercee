@@ -602,18 +602,46 @@ function levenshtein(a, b) {
 }
 
 function botReply(text) {
-  const msg = text.toLowerCase();
+  // Normalizar: minusculas + quitar acentos + quitar caracteres especiales
+  const normalize = (s) => s.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9\s]/g, '');
+
+  const msg = normalize(text);
   state.metrics.chatbotMessages += 1;
 
-  // Función para detectar coincidencias con tolerancia a errores ortográficos (typos)
+  // Funcion de match mejorada: busca en el mensaje normalizado con levenshtein
   const match = (keywords) => {
-    const words = msg.replace(/[^\w\sáéíóúüñ]/g, '').split(/\s+/);
-    return keywords.some(kw => {
-      if (msg.includes(kw)) return true;
+    // Expansion de sinonimos comunes para entender variaciones coloquiales
+    const synonyms = {
+      'celular': ['movil', 'telefono', 'cell', 'fono', 'smartphone', 'smarthphone'],
+      'laptop': ['computadora', 'computador', 'portatil', 'pc', 'compu', 'lapto', 'lptop'],
+      'precio': ['costo', 'cuanto', 'vale', 'soles', 'cuanto cuesta', 'cuanto vale', 'cuanto sale'],
+      'envio': ['delivery', 'despacho', 'manda', 'lleva', 'enviar', 'entregar', 'entrega'],
+      'pago': ['pagar', 'abonar', 'cancelar', 'cobro'],
+      'garantia': ['garantia', 'respaldo', 'falla', 'daño'],
+      'oferta': ['descuento', 'promo', 'barato', 'rebaja'],
+      'hola': ['hey', 'ola', 'buenas', 'buen dia', 'buenas tardes', 'buenas noches', 'holi'],
+      'gracias': ['grasias', 'thx', 'muchas gracias', 'grax', 'graciasss'],
+    };
+
+    // Construir lista extendida de palabras clave con sinonimos
+    let allKeywords = [...keywords];
+    keywords.forEach(kw => {
+      if (synonyms[kw]) allKeywords = [...allKeywords, ...synonyms[kw]];
+    });
+
+    const words = msg.split(/\s+/).filter(w => w.length > 0);
+
+    return allKeywords.some(kw => {
+      const normalKw = normalize(kw);
+      // Coincidencia directa como subcadena
+      if (msg.includes(normalKw)) return true;
+      // Coincidencia por palabra individual con levenshtein
       return words.some(w => {
-        if (Math.abs(w.length - kw.length) > 2) return false;
-        const limit = kw.length <= 4 ? 1 : 2; // tolerar 1 o 2 letras de error
-        return levenshtein(w, kw) <= limit;
+        if (Math.abs(w.length - normalKw.length) > 3) return false;
+        const limit = normalKw.length <= 4 ? 1 : normalKw.length <= 7 ? 2 : 3;
+        return levenshtein(w, normalKw) <= limit;
       });
     });
   };
@@ -731,7 +759,19 @@ function botReply(text) {
   if (match(['canje', 'canjear', 'puntos', 'fidelidad', 'descuento cliente'])) return 'Actualmente estamos desarrollando nuestro programa de fidelidad. Por ahora puedes usar el cupón INNOV10 para obtener un 10% de descuento en tu primera compra mayor a S/ 500.';
   if (match(['demo', 'prueba', 'ver funcionar', 'probar'])) return 'Puedes explorar productos, agregar al carrito, usar el cupón INNOV10 y simular una compra completa para ver cómo funciona el proceso.';
 
-  return 'No estoy seguro de entender esa consulta.\n\nPuedo ayudarte con:\n• Catalogo y Stock\n• Envios y Delivery\n• Pagos y Facturacion\n• Ofertas y Cupones\n• Garantia y Soporte\n• Informacion de la tienda\n\nEscribe "Asesor" si prefieres hablar con una persona.';
+  // Intento de deteccion contextual antes de rendirse
+  if (msg.length < 4) return 'Recibí tu mensaje. Puedes preguntarme sobre productos, precios, envíos, pagos o garantías. Estoy aquí para ayudarte.';
+  if (msg.match(/\?/) || msg.includes('como') || msg.includes('cuando') || msg.includes('donde') || msg.includes('por que') || msg.includes('cual')) {
+    return 'Esa es una buena pregunta. Para darte una respuesta precisa, podrías ampliar un poco más tu consulta o elegir uno de estos temas:\n• Productos y precios\n• Envíos y tiempos de entrega\n• Métodos de pago\n• Garantía y devoluciones\n• Soporte técnico\n\nO escribe "Asesor" si prefieres hablar con una persona.';
+  }
+
+  // Respuesta de fallback final mas amigable
+  const suggestions = [
+    'Puedo ayudarte con información sobre nuestros productos, precios, métodos de pago, envíos, garantías o soporte técnico. ¿Sobre cuál de estos temas quieres saber más?',
+    'No entendí bien tu consulta, pero puedo ayudarte con: precios, stock, envíos, pagos o garantías. También puedes escribir "Asesor" para hablar con una persona.',
+    'Disculpa, no capté exactamente lo que necesitas. Intenta con palabras como: precio, envío, garantía, pago, laptop, celular, o cualquier producto que busques.'
+  ];
+  return suggestions[Math.floor(Math.random() * suggestions.length)];
 }
 
 function addChatMessage(text, sender = 'bot') {
