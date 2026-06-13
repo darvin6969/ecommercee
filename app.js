@@ -692,6 +692,42 @@ function setupEvents() {
       addChatMessage(value, 'user');
       setTimeout(() => addChatMessage(botReply(value)), 250);
     });
+
+    // Lógica del Micrófono (Web Speech API)
+    const micBtn = $('#micBtn');
+    const chatInput = $('#chatInput');
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (SpeechRecognition && micBtn) {
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'es-PE';
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      micBtn.addEventListener('click', () => {
+        micBtn.classList.add('mic-active');
+        recognition.start();
+      });
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        chatInput.value = transcript;
+        micBtn.classList.remove('mic-active');
+        $('#chatForm').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+      };
+
+      recognition.onerror = (event) => {
+        console.error('Error de voz:', event.error);
+        micBtn.classList.remove('mic-active');
+        showToast('Error al escuchar. Intenta de nuevo.');
+      };
+      
+      recognition.onend = () => {
+        micBtn.classList.remove('mic-active');
+      };
+    } else if (micBtn) {
+      micBtn.style.display = 'none'; // Ocultar si el navegador no soporta voz
+    }
   }
 
   $('#favoritesBtn').addEventListener('click', () => {
